@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import { Colors } from "chart.js";
+
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -19,8 +21,28 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Colors
 );
+
+const options = {
+  indexAxis: "x",
+  elements: {
+    bar: {
+      borderWidth: 2,
+    },
+  },
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Crime",
+    },
+  },
+};
 
 const Chart = () => {
   const [crimeData, setCrimeData] = useState(null);
@@ -64,14 +86,15 @@ const Chart = () => {
   }, [selectedCrime]);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-14">
       <div className="" style={{ width: "800px", height: "800px" }}>
         <div>
           <label htmlFor="crimeSelect">Select Crime: </label>
           <select
             id="crimeSelect"
             value={selectedCrime}
-            onChange={(e) => setSelectedCrime(e.target.value)}>
+            onChange={(e) => setSelectedCrime(e.target.value)}
+            style={{ border: "1px solid #000000", borderRadius: "5px" }}>
             {crimeNames.length > 0 ? (
               crimeNames.map((crime) => (
                 <option key={crime} value={crime}>
@@ -87,9 +110,9 @@ const Chart = () => {
         </div>
 
         {crimeData !== null ? (
-          <Line data={crimeData} />
+          <Line data={crimeData} options={options} />
         ) : (
-          <div>The data is null</div>
+          <div>Loading chart data...</div>
         )}
       </div>
     </div>
